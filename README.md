@@ -14,3 +14,11 @@ device.
 
 
 ![alt tag](https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Mm1_queue.svg/292px-Mm1_queue.svg.png)
+
+
+- The simplest queuing model is M/M/1
+where both the arrival time and service
+time are exponentially distributed.
+- The M/D/1 model has exponentially
+distributed arrival times but fixed service
+time
