@@ -9,6 +9,7 @@ namespace MM1
         protected double _lambda;
         protected double _mu;
         Random rnd = new Random();
+        static int app = 1;
 
         public Program(double lambda, double mu)
         {
@@ -16,7 +17,7 @@ namespace MM1
             this._mu = mu;
         }
 
-        public void mm1(double simLength)
+        public void simulation(double simLength , int app)
         {
             Queue queue = new Queue();
             FES fes = new FES();
@@ -28,17 +29,17 @@ namespace MM1
 
             // Adding event
             fes.addEvent(new Event(Event.ARRIVAL, this.exp(this._lambda)));
-
+            double serviceTime = 1 / _mu;
             while (time < simLength)
             {
                 Event e = fes.nextEvent();
                 time = e.Time;
-                double serviceTime;
                 switch (e.Type)
                 {
                     case 1:
                         fes.addEvent(new Event(Event.ARRIVAL, time + this.exp(this._lambda)));
-                        serviceTime = this.exp(this._mu);
+                        if (app == 1)
+                            serviceTime = this.exp(this._mu);
                         queue.addCustomer(new Customer(time, serviceTime));
                         if (queue.Size != 1) break;
                         fes.addEvent(new Event(Event.DEPARTURE, time + serviceTime));
@@ -50,13 +51,11 @@ namespace MM1
                         serviceTime = queue.getCustomerAt(0).ServiceTime;
                         fes.addEvent(new Event(Event.DEPARTURE, time + serviceTime));
                         break;
-
-
                 }
             }
             stopwatch.Stop();
 
-            Console.WriteLine("=============== Rapport de la simulation MM1 =================");
+            Console.WriteLine("=============== Simulation Report =================");
             Console.WriteLine("Calculation time: " + stopwatch.ElapsedMilliseconds + " milliseconds");
             Console.WriteLine("Mean waiting time: " + queue.getMeanWaitingTime()+"");
             Console.WriteLine("Var waiting time: " + queue.getVarianceWaitingTime()+"");
@@ -77,7 +76,9 @@ namespace MM1
 
         static void Main(string[] args)
         {
-         
+
+            Console.WriteLine("Please select 1 for MM1 or 2 for MD1 : ");
+            app = int.Parse(Console.ReadLine());
 
             Console.WriteLine("enter the value of lambda : ");
             double lambda = double.Parse(Console.ReadLine());
@@ -88,14 +89,8 @@ namespace MM1
             Console.WriteLine("enter the simulation time : ");
             double duration = double.Parse(Console.ReadLine());
             
-
-           
             Program s = new Program(lambda, mu);
-            s.mm1(duration);
-
-           
-
-           
+            s.simulation(duration,app);
             Console.ReadKey();
         }
        
